@@ -1,0 +1,66 @@
+{
+    "Accessibility_Focused": {
+        "Background": "#1C1C1C",
+        "Menus": "#000000",
+        "Text_and_UI_elements": "#FFFFFF",
+        "Action_Buttons": "#007BFF",
+        "Alerts_and_Warnings": "#C0392B",
+        "Emphasis_Elements": "#E67E22"
+    },
+    "Modern_Technological": {
+        "Background": "#333333",
+        "Menus": "#273c75",
+        "Text_and_UI_elements": "#FFFFFF",
+        "Action_Buttons": "#2ecc71",
+        "Alerts_and_Warnings": "#F1C40F",
+        "Emphasis_Elements": "#1abc9c"
+    },
+    "Warm_Friendly": {
+        "Background": "#474747",
+        "Menus": "#7f8c8d",
+        "Text_and_UI_elements": "#f0e5d6",
+        "Action_Buttons": "#3498db",
+        "Alerts_and_Warnings": "#ff7f50",
+        "Emphasis_Elements": "#9b59b6"
+    },
+    "Professional_Sober": {
+        "Background": "#5B2333",
+        "Menus": "#2F4F4F",
+        "Text_and_UI_elements": "#B0BEC5",
+        "Action_Buttons": "#000000",
+        "Alerts_and_Warnings": "#000000",
+        "Emphasis_Elements": "#000000"
+    },
+    "Modern_Classic": {
+        "Background": "#800020",
+        "Menus": "#707B7C",
+        "Text_and_UI_elements": "#ECEBEB",
+        "Action_Buttons": "#1C1C1C",
+        "Alerts_and_Warnings": "#1C1C1C",
+        "Emphasis_Elements": "#1C1C1C"
+    },
+    "Elegant_Contemporary": {
+        "Background": "#641E16",
+        "Menus": "#5A6A73",
+        "Text_and_UI_elements": "#D5D8DC",
+        "Action_Buttons": "#2C3E50",
+        "Alerts_and_Warnings": "#2C3E50",
+        "Emphasis_Elements": "#2C3E50"
+    },
+    "Dynamic_Vibrant": {
+        "Background": "#9B1B30",
+        "Menus": "#4D5656",
+        "Text_and_UI_elements": "#C0C0C0",
+        "Action_Buttons": "#1A1A1A",
+        "Alerts_and_Warnings": "#1A1A1A",
+        "Emphasis_Elements": "#1A1A1A"
+    },
+    "Minimalist_Chic": {
+        "Background": "#7E373F",
+        "Menus": "#837E7C",
+        "Text_and_UI_elements": "#F8F9F9",
+        "Action_Buttons": "#363636",
+        "Alerts_and_Warnings": "#363636",
+        "Emphasis_Elements": "#363636"
+    }
+}
