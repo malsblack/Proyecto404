@@ -2,7 +2,7 @@ import flet as ft
 from flet import *
 import json
 from config.utilities import Accessibility_Focused,Modern_Technological,Warm_Friendly,Professional_Sober,Modern_Classic,Elegant_Contemporary,Dynamic_Vibrant,Minimalist_Chic
-
+print("prueba")
 def main(page: ft.Page):
 
     def mostrar_info_router(e):
