@@ -8,6 +8,11 @@ def lista_routers():
         routers = json.load(archivo)
         return routers
 
+async def lista_routers1():
+    with open('routers.json', 'r') as archivo:
+        routers = json.load(archivo)
+        return routers
+
 async def verificar_router(ip, username, password):
     print(f"Verificando router {ip}...")
     try:
@@ -26,7 +31,7 @@ async def verificar_router(ip, username, password):
 
 async def monitorear_routers():
     print("Iniciando verificación de routers....")
-    routers = await lista_routers()
+    routers = await lista_routers1()
     tasks = []
     routers=dict(routers)
     for router in routers:

@@ -298,9 +298,6 @@ async def verificar_router(ip, username, password):
     
 
 async def monitorear_routers():
-    
-
-
         print("Verificando estado de los routers:")
         for router in routers:
             ip = router["ip"]
