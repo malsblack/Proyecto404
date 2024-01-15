@@ -1,0 +1,4 @@
+flet:2517): Gdk-CRITICAL **: 01:04:28.091: gdk_window_get_state: assertion 'GDK_IS_WINDOW (window)' failed
+embedder.cc (2844): 'FlutterEngineUpdateLocales' returned 'kInvalidArguments'. Language code is required but not present in FlutterLocale.
+
+** (flet:2517): WARNING **: 01:04:28.261: Failed to set up Flutter locales
