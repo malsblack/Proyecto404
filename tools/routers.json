@@ -1,0 +1,32 @@
+{
+    "R1":{
+        "IP":"10.10.20.0",
+        "IP_LoopBack":"192.168.10.0",
+        "User":"Cisco1",
+        "Password":"Cisco"
+    },
+    "R2":{
+        "IP":"10.10.40.0",
+        "IP_LoopBack":"192.168.20.0",
+        "User":"Cisco2",
+        "Password":"Cisco"
+    },
+    "R3":{
+        "IP":"10.10.30.0",
+        "IP_LoopBack":"192.168.30.0",
+        "User":"Cisco3",
+        "Password":"Cisco"
+    },
+    "R4":{
+        "IP":"10.10.40.0",
+        "IP_LoopBack":"192.168.40.0",
+        "User":"Cisco4",
+        "Password":"Cisco"
+    },
+    "ISP":{
+        "IP":"192.168.100.200",
+        "IP_LoopBack":"192.168.50.0",
+        "User":"Cisco1",
+        "Password":"Cisco"
+    }
+}
