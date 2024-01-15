@@ -94,16 +94,15 @@ def main(page: ft.Page):
         page.window_destroy()
 
 
-    page.bgcolor=Background
+
     page.appbar=ft.AppBar(
             leading_width=40,
             title=ft.Text("MONITORIZACION DE RED",font_family="Garet",style=ft.TextThemeStyle.DISPLAY_LARGE,size=20),
             center_title=True,
-            bgcolor=Menus
         )
 
     # Create the image and label for the sidebar
-    sidebar_image = ft.Image(src='config\Images\equipo_404.jpg', width=200, height=100)  # Set the width and height as needed
+    sidebar_image = ft.Image(src='config\Images\equipo_404.jpg', width=100, height=100)  # Set the width and height as needed
     # Create a sidebar for network actions with the gray background
     sidebar_conteiner=ft.Container(
         content= ft.ListView(
@@ -120,7 +119,6 @@ def main(page: ft.Page):
 
             ]
         ),
-        bgcolor=Menus,  # Establece el color de fondo del contenedor del sidebar a gris
         padding=0,
 
     )
@@ -137,7 +135,6 @@ def main(page: ft.Page):
         height=1200,  # Ajustar la altura del contenedor para incluir el padding,
         alignment=ft.alignment.top_center,
         margin=margin.only(left=0,top=0,right=-100,bottom=0),
-        bgcolor=Menus
     )
 
 
@@ -190,7 +187,6 @@ def main(page: ft.Page):
         ],
         alignment=ft.alignment.top_center
     ),
-    bgcolor=Menus,
     expand=True,
     height=1000
 )
