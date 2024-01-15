@@ -4,6 +4,8 @@ import json
 from config.utilities import Accessibility_Focused
 from tools.connection import *
 import telnetlib
+import asyncio
+
 
 # Define the color scheme
 tema=Accessibility_Focused()
@@ -15,26 +17,293 @@ Alerts_and_Warnings=tema['Alerts_and_Warnings']
 Emphasis_Elements=tema['Emphasis_Elements']
 
 
+
+
+
+
+
+def consultar_ip_route(ip, username, password):
+    conexion_telnet = telnetlib.Telnet(ip, 22)
+    salida_control = conexion_telnet.read_until(b"Username:", timeout=1).decode("utf-8")
+    respuesta=""
+    # Enviar el nombre de usuario al router
+    conexion_telnet.write(username.encode("utf-8") + b"\n")
+    # Leer la respuesta del router
+    salida_control += conexion_telnet.read_until(b"Password:", timeout=1).decode("utf-8")
+    # Enviar la contraseña al router
+    conexion_telnet.write(password.encode("utf-8") + b"\n")
+
+    # Leer la respuesta del router
+    output += conexion_telnet.read_until(b">", timeout=1).decode("utf-8")
+
+    conexion_telnet.write(b"show ip route\n")
+       
+    while True:
+        output = conexion_telnet.read_until(b"--More--", timeout=1).decode("utf-8")
+        respuesta+=output        
+        if "--More--" not in output:
+            return respuesta
+    
+
+def consultar_dhcp(ip, username, password):
+    conexion_telnet = telnetlib.Telnet(ip, 22)
+    salida_control = conexion_telnet.read_until(b"Username:", timeout=1).decode("utf-8")
+    respuesta=""
+    # Enviar el nombre de usuario al router
+    conexion_telnet.write(username.encode("utf-8") + b"\n")
+    # Leer la respuesta del router
+    salida_control += conexion_telnet.read_until(b"Password:", timeout=1).decode("utf-8")
+    # Enviar la contraseña al router
+    conexion_telnet.write(password.encode("utf-8") + b"\n")
+
+    # Leer la respuesta del router
+    output += conexion_telnet.read_until(b">", timeout=1).decode("utf-8")
+
+    conexion_telnet.write(b"show ip dhcp pool\n")
+       
+    while True:
+        output = conexion_telnet.read_until(b"--More--", timeout=1).decode("utf-8")
+        respuesta+=output        
+        if "--More--" not in output:
+            return respuesta
+    
+def consultar_dns(ip, username, password):
+    conexion_telnet = telnetlib.Telnet(ip, 22)
+    salida_control = conexion_telnet.read_until(b"Username:", timeout=1).decode("utf-8")
+    respuesta=""
+    # Enviar el nombre de usuario al router
+    conexion_telnet.write(username.encode("utf-8") + b"\n")
+    # Leer la respuesta del router
+    salida_control += conexion_telnet.read_until(b"Password:", timeout=1).decode("utf-8")
+    # Enviar la contraseña al router
+    conexion_telnet.write(password.encode("utf-8") + b"\n")
+
+    # Leer la respuesta del router
+    output += conexion_telnet.read_until(b">", timeout=1).decode("utf-8")
+
+    conexion_telnet.write(b"show ip dns view\n")
+       
+    while True:
+        output = conexion_telnet.read_until(b"--More--", timeout=1).decode("utf-8")
+        respuesta+=output        
+        if "--More--" not in output:
+            return respuesta
+    
+def consultar_nat(ip, username, password):
+    conexion_telnet = telnetlib.Telnet(ip, 22)
+    salida_control = conexion_telnet.read_until(b"Username:", timeout=1).decode("utf-8")
+    respuesta=""
+    # Enviar el nombre de usuario al router
+    conexion_telnet.write(username.encode("utf-8") + b"\n")
+    # Leer la respuesta del router
+    salida_control += conexion_telnet.read_until(b"Password:", timeout=1).decode("utf-8")
+    # Enviar la contraseña al router
+    conexion_telnet.write(password.encode("utf-8") + b"\n")
+
+    # Leer la respuesta del router
+    output += conexion_telnet.read_until(b">", timeout=1).decode("utf-8")
+
+    conexion_telnet.write(b"show ip nat translations\n")
+       
+    while True:
+        output = conexion_telnet.read_until(b"--More--", timeout=1).decode("utf-8")
+        respuesta+=output        
+        if "--More--" not in output:
+            return respuesta
+    
+def consultar_acl(ip, username, password):
+    conexion_telnet = telnetlib.Telnet(ip, 22)
+    salida_control = conexion_telnet.read_until(b"Username:", timeout=1).decode("utf-8")
+    respuesta=""
+    # Enviar el nombre de usuario al router
+    conexion_telnet.write(username.encode("utf-8") + b"\n")
+    # Leer la respuesta del router
+    salida_control += conexion_telnet.read_until(b"Password:", timeout=1).decode("utf-8")
+    # Enviar la contraseña al router
+    conexion_telnet.write(password.encode("utf-8") + b"\n")
+
+    # Leer la respuesta del router
+    output += conexion_telnet.read_until(b">", timeout=1).decode("utf-8")
+
+    conexion_telnet.write(b"show access-lists\n")
+       
+    while True:
+        output = conexion_telnet.read_until(b"--More--", timeout=1).decode("utf-8")
+        respuesta+=output        
+        if "--More--" not in output:
+            return respuesta
+    
+
+
+
+
+
+def router_info_page_isp(page: ft.Page, router_id: str):
+    datos_routers=lista_routers()
+    ip=datos_routers[router_id]["IP"]
+    username=datos_routers[router_id]["User"]
+    password=datos_routers[router_id]["Password"]
+    
+    def mostrar_ip_route(e):
+        # Aquí va la lógica para mostrar "show ip route"
+
+        respuesta = consultar_ip_route(ip,username,password)
+        resultado_text.value = f"Resultado de 'show ip route': \n {respuesta}\n"
+        page.update()
+
+    def mostrar_dhcp(e):
+        # Aquí va la lógica para mostrar información de DHCP
+        respuesta = consultar_dhcp(ip,username,password)
+        resultado_text.value = f"Resultado de 'show ip dhcp pool': \n {respuesta}\n"
+        page.update()
+
+    def mostrar_dns(e):
+        # Aquí va la lógica para mostrar información de DNS
+        respuesta = consultar_dns(ip,username,password)
+        resultado_text.value = f"Resultado de 'show ip dns view': \n {respuesta}\n"
+        page.update()
+
+    def mostrar_nat(e):
+        # Aquí va la lógica para mostrar información de DNS
+        respuesta = consultar_nat(ip,username,password)
+        resultado_text.value = f"Resultado de 'show ip dns view': \n {respuesta}\n"
+        page.update()
+
+    # Limpia la página y agrega los nuevos controles
+    page.controls.clear()
+
+    # Área para mostrar los resultados
+    resultado_text = ft.Text("")
+
+    # Tamaño común para todos los botones
+    boton_tamano = 200
+
+    # Botones para las diferentes consultas
+    botones_columna = ft.Column(
+        controls=[
+            ft.Image(src="config\Images\equipo_404.jpg", width=boton_tamano, height=100),  # Ajusta la altura según necesites
+            ft.ElevatedButton(text="Show IP Route", on_click=mostrar_ip_route, width=boton_tamano,bgcolor=Action_Buttons),
+            ft.ElevatedButton(text="DHCP", on_click=mostrar_dhcp, width=boton_tamano,bgcolor=Action_Buttons),
+            ft.ElevatedButton(text="DNS", on_click=mostrar_dns, width=boton_tamano,bgcolor=Action_Buttons),
+            ft.ElevatedButton(text="NAT", on_click=mostrar_nat, width=boton_tamano,bgcolor=Action_Buttons),
+            ft.ElevatedButton(text="Volver", on_click=lambda e: build_main_page(page), width=boton_tamano,bgcolor=ft.colors.RED_700)
+        ],
+        spacing=50,  # Espacio entre los controles
+        width=boton_tamano  # Ancho de la columna
+    )
+
+    # Columna para el área de texto
+    texto_columna = ft.Column(
+        controls=[resultado_text],
+        expand=1  # Expande para ocupar el espacio restante
+    )
+
+    # Layout principal con Row
+    layout = ft.Row(
+        controls=[botones_columna, texto_columna]
+    )
+
+    page.add(layout)
+    page.update()
+
+
+def router_info_page_r4(page: ft.Page, router_id: str):
+    datos_routers=lista_routers()
+    ip=datos_routers[router_id]["IP"]
+    username=datos_routers[router_id]["User"]
+    password=datos_routers[router_id]["Password"]
+    
+    def mostrar_ip_route(e):
+        # Aquí va la lógica para mostrar "show ip route"
+        respuesta = consultar_ip_route(ip,username,password)
+        resultado_text.value = f"Resultado de 'show ip route': \n {respuesta}\n"
+        page.update()
+
+    def mostrar_dhcp(e):
+        # Aquí va la lógica para mostrar información de DHCP
+        respuesta = consultar_dhcp(ip,username,password)
+        resultado_text.value = f"Resultado de 'show ip dhcp pool': \n {respuesta}\n"
+        page.update()
+
+    def mostrar_dns(e):
+        # Aquí va la lógica para mostrar información de DNS
+        respuesta = consultar_dns(ip,username,password)
+        resultado_text.value = f"Resultado de 'show ip dns view': \n {respuesta}\n"
+        page.update()
+
+    def mostrar_acl(e):
+        # Aquí va la lógica para mostrar información de DNS
+        respuesta = consultar_acl(ip,username,password)
+        resultado_text.value = f"Resultado de 'show access-lists': \n {respuesta}\n"
+        page.update()
+    # Limpia la página y agrega los nuevos controles
+    page.controls.clear()
+
+    # Área para mostrar los resultados
+    resultado_text = ft.Text("")
+
+    # Tamaño común para todos los botones
+    boton_tamano = 200
+
+    # Botones para las diferentes consultas
+    botones_columna = ft.Column(
+        controls=[
+            ft.Image(src="config\Images\equipo_404.jpg", width=boton_tamano, height=100),  # Ajusta la altura según necesites
+            ft.ElevatedButton(text="Show IP Route", on_click=mostrar_ip_route, width=boton_tamano,bgcolor=Action_Buttons),
+            ft.ElevatedButton(text="DHCP", on_click=mostrar_dhcp, width=boton_tamano,bgcolor=Action_Buttons),
+            ft.ElevatedButton(text="DNS", on_click=mostrar_dns, width=boton_tamano,bgcolor=Action_Buttons),
+            ft.ElevatedButton(text="ACL", on_click=mostrar_acl, width=boton_tamano,bgcolor=Action_Buttons),
+            ft.ElevatedButton(text="Volver", on_click=lambda e: build_main_page(page), width=boton_tamano,bgcolor=ft.colors.RED_700)
+        ],
+        spacing=50,  # Espacio entre los controles
+        width=boton_tamano  # Ancho de la columna
+    )
+
+    # Columna para el área de texto
+    texto_columna = ft.Column(
+        controls=[resultado_text],
+        expand=1  # Expande para ocupar el espacio restante
+    )
+
+    # Layout principal con Row
+    layout = ft.Row(
+        controls=[botones_columna, texto_columna]
+    )
+
+    page.add(layout)
+    page.update()
+
+
 def build_main_page(page: ft.Page):
     # Aquí reconstruyes la interfaz de la página principal
     page.controls.clear()
     main(page)
 
 def router_info_page(page: ft.Page, router_id: str):
+    print("entre")
+    datos_routers=lista_routers()
+    ip=datos_routers[router_id]["IP"]
+    username=datos_routers[router_id]["User"]
+    password=datos_routers[router_id]["Password"]
+
     def mostrar_ip_route(e):
-        # Aquí va la lógica para mostrar "show ip route"
-        resultado_text.value = f"Resultado de 'show ip route' para {router_id}"
+        respuesta = consultar_ip_route(ip,username,password)
+        resultado_text.value = f"Resultado de 'show ip route': \n {respuesta}\n"
         page.update()
 
     def mostrar_dhcp(e):
         # Aquí va la lógica para mostrar información de DHCP
-        resultado_text.value = "Resultado de DHCP"
+        respuesta = consultar_dhcp(ip,username,password)
+        resultado_text.value = f"Resultado de 'show ip dhcp pool': \n {respuesta}\n"
         page.update()
 
     def mostrar_dns(e):
         # Aquí va la lógica para mostrar información de DNS
-        resultado_text.value = "Resultado de DNS"
+        respuesta = consultar_dns(ip,username,password)
+        resultado_text.value = f"Resultado de 'show ip dns view': \n {respuesta}\n"
         page.update()
+
+
 
     # Limpia la página y agrega los nuevos controles
     page.controls.clear()
@@ -74,6 +343,12 @@ def router_info_page(page: ft.Page, router_id: str):
 
 
 def main(page: ft.Page):
+    def monitorear_routers_de_red(e):
+        resultados=iniciar()
+
+
+        # Crea y muestra la ventana de diálogo con el resultado
+
 
     def mostrar_info_router_bottom_sheet_R1(e):
         router_info_page(page, "R1")
@@ -85,10 +360,10 @@ def main(page: ft.Page):
         router_info_page(page, "R3")
 
     def mostrar_info_router_bottom_sheet_R4(e):
-        router_info_page(page, "R4")
+        router_info_page_r4(page, "R4")
 
     def mostrar_info_router_bottom_sheet_ISP(e):
-        router_info_page(page, "ISP")
+        router_info_page_isp(page, "ISP")
 
     def close_app(e):
         page.window_destroy()
@@ -112,7 +387,7 @@ def main(page: ft.Page):
             first_item_prototype=True,
             controls=[
                 sidebar_image,
-                ft.FloatingActionButton(content=ft.Row([ft.Icon(ft.icons.REDUCE_CAPACITY,color=Text_and_UI_elements), ft.Text("INICIAR SCANEO",color=Text_and_UI_elements,font_family="Garet")], alignment="center", spacing=10),bgcolor=Action_Buttons,shape=ft.RoundedRectangleBorder(radius=40),width=200,mini=True,),
+                ft.FloatingActionButton(content=ft.Row([ft.Icon(ft.icons.REDUCE_CAPACITY,color=Text_and_UI_elements), ft.Text("INICIAR SCANEO",color=Text_and_UI_elements,font_family="Garet")], alignment="center", spacing=10),bgcolor=Action_Buttons,shape=ft.RoundedRectangleBorder(radius=40),width=200,mini=True,on_click=monitorear_routers_de_red),
                 ft.FloatingActionButton(content=ft.Row([ft.Icon(ft.icons.REDUCE_CAPACITY,color=Text_and_UI_elements), ft.Text("SCANEO DE UN ROUTER",color=Text_and_UI_elements,font_family="Garet")], alignment="center", spacing=10),bgcolor=Action_Buttons,shape=ft.RoundedRectangleBorder(radius=40),width=200,mini=True,),
                 ft.FloatingActionButton(content=ft.Row([ft.Icon(ft.icons.REDUCE_CAPACITY,color=Text_and_UI_elements), ft.Text("REPORTE DE RED",color=Text_and_UI_elements,font_family="Garet")], alignment="center", spacing=10),bgcolor=Action_Buttons,shape=ft.RoundedRectangleBorder(radius=40),width=200,mini=True,),
                 ft.FloatingActionButton(content=ft.Row([ft.Icon(ft.icons.REDUCE_CAPACITY,color=Text_and_UI_elements), ft.Text("SALIR",color=Text_and_UI_elements,font_family="Garet")], alignment="center", spacing=10),bgcolor=ft.colors.RED_700,shape=ft.RoundedRectangleBorder(radius=40),width=200,mini=True,on_click=close_app,)
