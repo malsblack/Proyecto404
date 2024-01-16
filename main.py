@@ -23,15 +23,20 @@ Emphasis_Elements=tema['Emphasis_Elements']
 
 
 def consultar_ip_route(ip, username, password):
-    conexion_telnet = telnetlib.Telnet(ip, 22)
-    salida_control = conexion_telnet.read_until(b"Username:", timeout=1).decode("utf-8")
+    print(ip)
+    print(username)
+    print(password)
+    conexion_telnet = telnetlib.Telnet(ip,23)
+    print("sesion telnet creada")
+    salida_control = conexion_telnet.read_until(b"Username:", timeout=10).decode("utf-8")
     respuesta=""
     # Enviar el nombre de usuario al router
     conexion_telnet.write(username.encode("utf-8") + b"\n")
     # Leer la respuesta del router
-    salida_control += conexion_telnet.read_until(b"Password:", timeout=1).decode("utf-8")
+    salida_control = conexion_telnet.read_until(b"Password:", timeout=10).decode("utf-8")
     # Enviar la contraseña al router
     conexion_telnet.write(password.encode("utf-8") + b"\n")
+    output=""
 
     # Leer la respuesta del router
     output += conexion_telnet.read_until(b">", timeout=1).decode("utf-8")
@@ -46,7 +51,7 @@ def consultar_ip_route(ip, username, password):
     
 
 def consultar_dhcp(ip, username, password):
-    conexion_telnet = telnetlib.Telnet(ip, 22)
+    conexion_telnet = telnetlib.Telnet(ip, 23)
     salida_control = conexion_telnet.read_until(b"Username:", timeout=1).decode("utf-8")
     respuesta=""
     # Enviar el nombre de usuario al router
@@ -55,7 +60,7 @@ def consultar_dhcp(ip, username, password):
     salida_control += conexion_telnet.read_until(b"Password:", timeout=1).decode("utf-8")
     # Enviar la contraseña al router
     conexion_telnet.write(password.encode("utf-8") + b"\n")
-
+    output=""
     # Leer la respuesta del router
     output += conexion_telnet.read_until(b">", timeout=1).decode("utf-8")
 
@@ -68,7 +73,7 @@ def consultar_dhcp(ip, username, password):
             return respuesta
     
 def consultar_dns(ip, username, password):
-    conexion_telnet = telnetlib.Telnet(ip, 22)
+    conexion_telnet = telnetlib.Telnet(ip, 23)
     salida_control = conexion_telnet.read_until(b"Username:", timeout=1).decode("utf-8")
     respuesta=""
     # Enviar el nombre de usuario al router
@@ -77,11 +82,11 @@ def consultar_dns(ip, username, password):
     salida_control += conexion_telnet.read_until(b"Password:", timeout=1).decode("utf-8")
     # Enviar la contraseña al router
     conexion_telnet.write(password.encode("utf-8") + b"\n")
-
+    output=""
     # Leer la respuesta del router
     output += conexion_telnet.read_until(b">", timeout=1).decode("utf-8")
 
-    conexion_telnet.write(b"show ip dns view\n")
+    conexion_telnet.write(b"show running-config | include dns-server \n")
        
     while True:
         output = conexion_telnet.read_until(b"--More--", timeout=1).decode("utf-8")
@@ -90,7 +95,7 @@ def consultar_dns(ip, username, password):
             return respuesta
     
 def consultar_nat(ip, username, password):
-    conexion_telnet = telnetlib.Telnet(ip, 22)
+    conexion_telnet = telnetlib.Telnet(ip, 23)
     salida_control = conexion_telnet.read_until(b"Username:", timeout=1).decode("utf-8")
     respuesta=""
     # Enviar el nombre de usuario al router
@@ -99,7 +104,7 @@ def consultar_nat(ip, username, password):
     salida_control += conexion_telnet.read_until(b"Password:", timeout=1).decode("utf-8")
     # Enviar la contraseña al router
     conexion_telnet.write(password.encode("utf-8") + b"\n")
-
+    output=""
     # Leer la respuesta del router
     output += conexion_telnet.read_until(b">", timeout=1).decode("utf-8")
 
@@ -112,7 +117,7 @@ def consultar_nat(ip, username, password):
             return respuesta
     
 def consultar_acl(ip, username, password):
-    conexion_telnet = telnetlib.Telnet(ip, 22)
+    conexion_telnet = telnetlib.Telnet(ip, 23)
     salida_control = conexion_telnet.read_until(b"Username:", timeout=1).decode("utf-8")
     respuesta=""
     # Enviar el nombre de usuario al router
@@ -121,6 +126,7 @@ def consultar_acl(ip, username, password):
     salida_control += conexion_telnet.read_until(b"Password:", timeout=1).decode("utf-8")
     # Enviar la contraseña al router
     conexion_telnet.write(password.encode("utf-8") + b"\n")
+    output=""
 
     # Leer la respuesta del router
     output += conexion_telnet.read_until(b">", timeout=1).decode("utf-8")
@@ -132,7 +138,8 @@ def consultar_acl(ip, username, password):
         respuesta+=output        
         if "--More--" not in output:
             return respuesta
-    
+
+
 
 
 
@@ -160,14 +167,10 @@ def router_info_page_isp(page: ft.Page, router_id: str):
     def mostrar_dns(e):
         # Aquí va la lógica para mostrar información de DNS
         respuesta = consultar_dns(ip,username,password)
-        resultado_text.value = f"Resultado de 'show ip dns view': \n {respuesta}\n"
+        resultado_text.value = f"Resultado de 'show running config | include dns': \n {respuesta}\n"
         page.update()
 
-    def mostrar_nat(e):
-        # Aquí va la lógica para mostrar información de DNS
-        respuesta = consultar_nat(ip,username,password)
-        resultado_text.value = f"Resultado de 'show ip dns view': \n {respuesta}\n"
-        page.update()
+
 
     # Limpia la página y agrega los nuevos controles
     page.controls.clear()
@@ -185,7 +188,6 @@ def router_info_page_isp(page: ft.Page, router_id: str):
             ft.ElevatedButton(text="Show IP Route", on_click=mostrar_ip_route, width=boton_tamano,bgcolor=Action_Buttons),
             ft.ElevatedButton(text="DHCP", on_click=mostrar_dhcp, width=boton_tamano,bgcolor=Action_Buttons),
             ft.ElevatedButton(text="DNS", on_click=mostrar_dns, width=boton_tamano,bgcolor=Action_Buttons),
-            ft.ElevatedButton(text="NAT", on_click=mostrar_nat, width=boton_tamano,bgcolor=Action_Buttons),
             ft.ElevatedButton(text="Volver", on_click=lambda e: build_main_page(page), width=boton_tamano,bgcolor=ft.colors.RED_700)
         ],
         spacing=50,  # Espacio entre los controles
@@ -237,6 +239,12 @@ def router_info_page_r4(page: ft.Page, router_id: str):
         resultado_text.value = f"Resultado de 'show access-lists': \n {respuesta}\n"
         page.update()
     # Limpia la página y agrega los nuevos controles
+
+    def mostrar_nat(e):
+        # Aquí va la lógica para mostrar información de DNS
+        respuesta = consultar_nat(ip,username,password)
+        resultado_text.value = f"Resultado de 'show nat translations': \n {respuesta}\n"
+        page.update()
     page.controls.clear()
 
     # Área para mostrar los resultados
@@ -253,6 +261,7 @@ def router_info_page_r4(page: ft.Page, router_id: str):
             ft.ElevatedButton(text="DHCP", on_click=mostrar_dhcp, width=boton_tamano,bgcolor=Action_Buttons),
             ft.ElevatedButton(text="DNS", on_click=mostrar_dns, width=boton_tamano,bgcolor=Action_Buttons),
             ft.ElevatedButton(text="ACL", on_click=mostrar_acl, width=boton_tamano,bgcolor=Action_Buttons),
+            ft.ElevatedButton(text="NAT", on_click=mostrar_nat, width=boton_tamano,bgcolor=Action_Buttons),
             ft.ElevatedButton(text="Volver", on_click=lambda e: build_main_page(page), width=boton_tamano,bgcolor=ft.colors.RED_700)
         ],
         spacing=50,  # Espacio entre los controles
